@@ -21,12 +21,16 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class BaseTest {
     protected static AppiumDriver driver;
     protected static Properties props;
+    protected static HashMap<String, String> strings = new HashMap<String, String>();
     InputStream inputStream;
+    InputStream stringis;
+    TestUtils utils;
 
     public BaseTest(){
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
@@ -38,8 +42,14 @@ public class BaseTest {
         try{
             props = new Properties();
             String propFileName = "config.properties";
+            String xmlFileName = "strings/strings.xml";
+
             inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
             props.load(inputStream);
+
+            stringis = getClass().getClassLoader().getResourceAsStream(xmlFileName);
+            utils = new TestUtils();
+            strings = utils.parseStringXML(stringis);
 
             DesiredCapabilities caps = new DesiredCapabilities();
             caps.setCapability(MobileCapabilityType.PLATFORM_NAME,platformName);
@@ -58,6 +68,13 @@ public class BaseTest {
             String sessionId = driver.getSessionId().toString();
         } catch (Exception e){
             e.printStackTrace();
+        } finally {
+            if (inputStream != null){
+                inputStream.close();
+            }
+            if (stringis != null){
+                stringis.close();
+            }
         }
     }
 
