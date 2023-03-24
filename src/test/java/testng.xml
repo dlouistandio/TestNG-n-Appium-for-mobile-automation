@@ -2,8 +2,12 @@
 
 <suite name="Suite1" verbose="1" >
     <test name="Regression1"   >
+        <parameter name="platformName" value="Android"/>
+        <parameter name="platformVersion" value="13"/>
+        <parameter name="deviceName" value="Samsung A52"/>
+        <parameter name="udid" value="RR8R602TX1M"/>
         <classes>
-            <class name="test1" />
+            <class name="com.qa.tests.LoginTests" />
         </classes>
     </test>
 </suite>
