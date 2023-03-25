@@ -31,6 +31,7 @@ public class LoginTests extends BaseTest {
             loginUsers = new JSONObject(tokener);
         }catch (Exception e){
             e.printStackTrace();
+            throw e;
         }finally {
             if(datais != null){
                 datais.close();

@@ -3,6 +3,7 @@ package com.qa;
 import com.qa.utils.TestUtils;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,7 @@ import org.testng.annotations.Parameters;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.PublicKey;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Properties;
@@ -28,6 +30,7 @@ public class BaseTest {
     protected static AppiumDriver driver;
     protected static Properties props;
     protected static HashMap<String, String> strings = new HashMap<String, String>();
+    protected static String platform;
     InputStream inputStream;
     InputStream stringis;
     TestUtils utils;
@@ -39,6 +42,8 @@ public class BaseTest {
     @Parameters({"platformName","platformVersion","deviceName","udid"})
     @BeforeTest
     public void beforeTest(String platformName, String platformVersion, String deviceName, String udid) throws Exception {
+        platform = platformName;
+        URL url;
         try{
             props = new Properties();
             String propFileName = "config.properties";
@@ -55,17 +60,36 @@ public class BaseTest {
             caps.setCapability(MobileCapabilityType.PLATFORM_NAME,platformName);
             caps.setCapability(MobileCapabilityType.PLATFORM_VERSION,platformVersion);
             caps.setCapability(MobileCapabilityType.DEVICE_NAME,deviceName);
-            caps.setCapability(MobileCapabilityType.UDID,udid);
-            caps.setCapability(MobileCapabilityType.AUTOMATION_NAME,props.getProperty("androidAutomationName"));
-            caps.setCapability("appPackage",props.getProperty("androidAppPackage"));
-            caps.setCapability("appActivity",props.getProperty("androidAppActivity"));
-            URL appUrl = getClass().getClassLoader().getResource(props.getProperty("androidAppLocation"));
-            caps.setCapability("app", appUrl);
 
-            URL url = new URL(props.getProperty("appiumURL"));
+            switch (platformName){
+                case "Android":
+                    caps.setCapability(MobileCapabilityType.UDID,udid);
+                    caps.setCapability(MobileCapabilityType.AUTOMATION_NAME,props.getProperty("androidAutomationName"));
+                    caps.setCapability("appPackage",props.getProperty("androidAppPackage"));
+                    caps.setCapability("appActivity",props.getProperty("androidAppActivity"));
+                    String androidAppUrl = getClass().getResource(props.getProperty("androidAppLocation")).getFile();
+                    System.out.println("app url is " + androidAppUrl);
+                    caps.setCapability("app", androidAppUrl);
 
-            driver = new AndroidDriver(url, caps);
-            String sessionId = driver.getSessionId().toString();
+                    url = new URL(props.getProperty("appiumURL"));
+
+                    driver = new AndroidDriver(url, caps);
+                    break;
+                case "iOS":
+                    caps.setCapability(MobileCapabilityType.AUTOMATION_NAME,props.getProperty("iOSAutomationName"));
+                    String iosAppUrl = getClass().getResource(props.getProperty("iOSAppLocation")).getFile();
+                    System.out.println("app url is " + iosAppUrl);
+                    caps.setCapability("bundleId", props.getProperty("iOSBundleId"));
+//                    caps.setCapability("app", iosAppUrl);
+
+                    url = new URL(props.getProperty("appiumURL"));
+
+                    driver = new IOSDriver(url, caps);
+                    break;
+                default:
+                    throw new Exception("Invalid Platform! - " + platformName);
+            }
+
         } catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -83,6 +107,11 @@ public class BaseTest {
         wait.until(ExpectedConditions.visibilityOf(e));
     }
 
+    public void clear(WebElement e){
+        waitForVisibilty(e);
+        e.clear();
+    }
+
     public void click(WebElement e){
         waitForVisibilty(e);
         e.click();
@@ -96,6 +125,16 @@ public class BaseTest {
     public String getAttribute(WebElement e, String attribute){
         waitForVisibilty(e);
         return e.getAttribute(attribute);
+    }
+
+    public String getText(WebElement e){
+        switch (platform){
+            case "Android":
+               return getAttribute(e, "text");
+            case "iOS":
+                return getAttribute(e, "label");
+        }
+        return null;
     }
 
     @AfterTest
