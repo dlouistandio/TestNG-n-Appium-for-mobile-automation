@@ -37,6 +37,8 @@ public class LoginTests extends BaseTest {
                 datais.close();
             }
         }
+        closeApp();
+        launchApp();
     }
     @AfterClass
     public void afterClass(){
@@ -51,7 +53,7 @@ public class LoginTests extends BaseTest {
     }
     @Test
     public void invalidLogin(){
-        loginPage.enterUserName(loginUsers.getJSONObject("invalidLogin").getString("username"));
+        loginPage.enterUsername(loginUsers.getJSONObject("invalidLogin").getString("username"));
         loginPage.enterPassword(loginUsers.getJSONObject("invalidLogin").getString("password"));
         loginPage.pressLoginBtn();
 
@@ -64,7 +66,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void validLogin(){
-        loginPage.enterUserName(loginUsers.getJSONObject("validLogin").getString("username"));
+        loginPage.enterUsername(loginUsers.getJSONObject("validLogin").getString("username"));
         loginPage.enterPassword(loginUsers.getJSONObject("validLogin").getString("password"));
         productPage = loginPage.pressLoginBtn();
 

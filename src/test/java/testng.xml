@@ -10,11 +10,11 @@
         <parameter name="deviceName" value="Samsung A52"/>
         <parameter name="udid" value="RR8R602TX1M"/>
         <classes>
-            <class name="com.qa.tests.LoginTests">
+            <class name="com.qa.tests.LoginTests"/>
+            <class name="com.qa.tests.ProductTests"/>
 <!--            <methods>-->
 <!--                <include name="invalidLogin"/>-->
 <!--            </methods>-->
-            </class>
         </classes>
     </test>
 </suite>

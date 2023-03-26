@@ -20,9 +20,9 @@ public class LoginPage extends BaseTest {
     @iOSXCUITFindBy(xpath = "cr[@name=\"test-Error message\"]/child::XCUIElementTypeStaticText")
     private WebElement errorText;
 
-    public LoginPage enterUserName(String userName) {
+    public LoginPage enterUsername(String username) {
         clear(usernameField);
-        sendKeys(usernameField, userName);
+        sendKeys(usernameField, username);
         return this;
     }
 
@@ -39,5 +39,12 @@ public class LoginPage extends BaseTest {
     public ProductPage pressLoginBtn() {
         click(loginButton);
         return new ProductPage();
+    }
+
+    public ProductPage login(String username, String password){
+        enterUsername(username);
+        enterPassword(password);
+        pressLoginBtn();
+        return pressLoginBtn();
     }
 }

@@ -2,6 +2,7 @@ package com.qa;
 
 import com.qa.utils.TestUtils;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.InteractsWithApps;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
@@ -35,6 +36,7 @@ public class BaseTest {
     InputStream stringis;
     TestUtils utils;
 
+
     public BaseTest(){
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
@@ -67,13 +69,13 @@ public class BaseTest {
                     caps.setCapability(MobileCapabilityType.AUTOMATION_NAME,props.getProperty("androidAutomationName"));
                     caps.setCapability("appPackage",props.getProperty("androidAppPackage"));
                     caps.setCapability("appActivity",props.getProperty("androidAppActivity"));
-                    String androidAppUrl = getClass().getResource(props.getProperty("androidAppLocation")).getFile();
-                    System.out.println("app url is " + androidAppUrl);
-                    caps.setCapability("app", androidAppUrl);
+//                    String androidAppUrl = getClass().getResource(props.getProperty("androidAppLocation")).getFile();
+//                    System.out.println("app url is " + androidAppUrl);
+//                    caps.setCapability("app", androidAppUrl);
 
                     url = new URL(props.getProperty("appiumURL"));
 
-                    driver = new AndroidDriver(url, caps);
+                    driver = new AndroidDriver(url,caps);
                     break;
                 case "iOS":
                     caps.setCapability(MobileCapabilityType.AUTOMATION_NAME,props.getProperty("iOSAutomationName"));
@@ -135,6 +137,26 @@ public class BaseTest {
                 return getAttribute(e, "label");
         }
         return null;
+    }
+
+    public void closeApp() {
+        switch(platform){
+            case "Android":
+                ((InteractsWithApps)driver).terminateApp(props.getProperty("androidAppPackage"));
+                break;
+            case "iOS":
+                ((InteractsWithApps) driver).terminateApp(props.getProperty("iOSBundleId"));
+        }
+    }
+
+    public void launchApp() {
+        switch(platform){
+            case "Android":
+                ((InteractsWithApps) driver).activateApp(props.getProperty("androidAppPackage"));
+                break;
+            case "iOS":
+                ((InteractsWithApps) driver).activateApp(props.getProperty("iOSBundleId"));
+        }
     }
 
     @AfterTest
