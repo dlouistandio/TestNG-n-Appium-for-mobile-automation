@@ -6,10 +6,11 @@ import org.openqa.selenium.WebElement;
 
 public class MenuPage extends BaseTest{
 
-    @AndroidFindBy (xpath = "//android.view.ViewGroup[@content-desc=\"test-Menu\"]/android.view.ViewGroup/android.widget.ImageView\n")
+    @AndroidFindBy (xpath = "//android.view.ViewGroup[@content-desc=\"test-Menu\"]/android.view.ViewGroup/android.widget.ImageView")
     private WebElement settingBtn;
 
     public SettingPage pressSettingBtn(){
+        System.out.println("Press settings button");
         click(settingBtn);
         return new SettingPage();
     }

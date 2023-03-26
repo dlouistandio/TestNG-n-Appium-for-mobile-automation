@@ -20,18 +20,25 @@ public class ProductPage extends MenuPage {
     private WebElement SLBPrice;
 
     public String getTitle(){
-        return getText(productText);
+        String title = getText(productText);
+        System.out.println("Page title is " + title);
+        return title;
     }
 
     public String getSLBTitle(){
-        return getText(SLBTitle);
+        String product = getText(SLBTitle);
+        System.out.println("Product title is " + product);
+        return product;
     }
 
     public String getSLBPrice(){
-        return getText(SLBPrice);
+        String price = getText(SLBPrice);
+        System.out.println("Product price is " + price);
+        return price;
     }
 
     public ProductDetailPage pressSLBTitle(){
+        System.out.println("Press the product");
         click(SLBTitle);
         return new ProductDetailPage();
     }

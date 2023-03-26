@@ -15,14 +15,19 @@ public class ProductDetailPage extends BaseTest {
     private WebElement backToProductBtn;
 
     public String getSLBTitle(){
-        return getText(SLBTitle);
+        String title = getText(SLBTitle);
+        System.out.println("Product title in details page is " + title);
+        return title;
     }
 
     public String getSLBDesc(){
-        return getText(SLBDesc);
+        String desc = getText(SLBDesc);
+        System.out.println("Product desc in details page is " + desc);
+        return desc;
     }
 
     public ProductPage pressBackToProductsBtn(){
+        System.out.println("Press back to product page");
         click(backToProductBtn);
         return new ProductPage();
     }

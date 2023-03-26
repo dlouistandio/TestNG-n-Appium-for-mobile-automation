@@ -86,7 +86,7 @@ public class ProductTests extends BaseTest {
         String SLBPrice = productDetailPage.getSLBDesc();
         sa.assertEquals(SLBPrice, strings.get("product_detail_page_slb_desc"));
 
-        productPage = productDetailPage.pressBackToProductsBtn();
+//        productPage = productDetailPage.pressBackToProductsBtn();
 
         settingPage = productPage.pressSettingBtn();
         loginPage = settingPage.pressLogoutBtn();

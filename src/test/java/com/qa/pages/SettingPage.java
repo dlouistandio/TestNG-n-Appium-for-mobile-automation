@@ -9,6 +9,7 @@ public class SettingPage extends BaseTest {
     private WebElement logoutBtn;
 
     public LoginPage pressLogoutBtn(){
+        System.out.println("Press logout button");
         click(logoutBtn);
         return new LoginPage();
     }
