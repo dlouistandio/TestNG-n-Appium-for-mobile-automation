@@ -47,17 +47,20 @@ public class ProductTests extends BaseTest {
     public void beforeMethod(Method m){
         loginPage = new LoginPage();
         System.out.println("\n" + "******* Start test: " + m.getName() + "*********" + "\n");
+
+        productPage = loginPage.login(
+                loginUsers.getJSONObject("validLogin").getString("username"), loginUsers.getJSONObject("validLogin").getString("password"));
     }
     @AfterMethod
     public void afterMethod(){
+        settingPage = productPage.pressSettingBtn();
+        loginPage = settingPage.pressLogoutBtn();
+
     }
 
     @Test
     public void validateProductOnProductPage(){
         SoftAssert sa = new SoftAssert();
-
-        productPage = loginPage.login(
-                loginUsers.getJSONObject("validLogin").getString("username"), loginUsers.getJSONObject("validLogin").getString("password"));
 
         String SLBTitle = productPage.getSLBTitle();
         sa.assertEquals(SLBTitle, strings.get("product_page_slb_title"));
@@ -65,18 +68,12 @@ public class ProductTests extends BaseTest {
         String SLBPrice = productPage.getSLBPrice();
         sa.assertEquals(SLBPrice, strings.get("product_page_slb_price"));
 
-        settingPage = productPage.pressSettingBtn();
-        loginPage = settingPage.pressLogoutBtn();
-
         sa.assertAll();
     }
 
     @Test
     public void validateProductOnProductDetailsPage(){
         SoftAssert sa = new SoftAssert();
-
-        productPage = loginPage.login(
-                loginUsers.getJSONObject("validLogin").getString("username"), loginUsers.getJSONObject("validLogin").getString("password"));
 
         productDetailPage = productPage.pressSLBTitle();
 
@@ -87,9 +84,6 @@ public class ProductTests extends BaseTest {
         sa.assertEquals(SLBPrice, strings.get("product_detail_page_slb_desc"));
 
 //        productPage = productDetailPage.pressBackToProductsBtn();
-
-        settingPage = productPage.pressSettingBtn();
-        loginPage = settingPage.pressLogoutBtn();
 
         sa.assertAll();
     }
