@@ -14,9 +14,11 @@ public class ProductPage extends MenuPage {
     private WebElement productText;
 
     @AndroidFindBy(xpath = "(//android.widget.TextView[@content-desc=\"test-Item title\"])[1]")
+    @iOSXCUITFindBy (xpath = "(//XCUIElementTypeStaticText[@name=\"test-Item title\"])[1]")
     private WebElement SLBTitle;
 
     @AndroidFindBy(xpath = "(//android.widget.TextView[@content-desc=\"test-Price\"])[1]")
+    @iOSXCUITFindBy (xpath = "(//XCUIElementTypeStaticText[@name=\"test-Price\"])[1]")
     private WebElement SLBPrice;
 
     public String getTitle(){
