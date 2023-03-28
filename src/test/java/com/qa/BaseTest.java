@@ -1,6 +1,7 @@
 package com.qa;
 
 import com.qa.utils.TestUtils;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.InteractsWithApps;
 import io.appium.java_client.android.AndroidDriver;
@@ -32,6 +33,7 @@ public class BaseTest {
     protected static Properties props;
     protected static HashMap<String, String> strings = new HashMap<String, String>();
     protected static String platform;
+    protected static String dateTime;
     InputStream inputStream;
     InputStream stringis;
     TestUtils utils;
@@ -44,6 +46,7 @@ public class BaseTest {
     @Parameters({"platformName","platformVersion","deviceName","udid"})
     @BeforeTest
     public void beforeTest(String platformName, String platformVersion, String deviceName, String udid) throws Exception {
+        dateTime = utils.dateTime();
         platform = platformName;
         URL url;
         try{
@@ -104,6 +107,14 @@ public class BaseTest {
         }
     }
 
+    public AppiumDriver getDriver(){
+        return driver;
+    }
+
+    public String getDateTime(){
+        return dateTime;
+    }
+
     public void waitForVisibilty(WebElement e){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TestUtils.WAIT));
         wait.until(ExpectedConditions.visibilityOf(e));
@@ -157,6 +168,24 @@ public class BaseTest {
             case "iOS":
                 ((InteractsWithApps) driver).activateApp(props.getProperty("iOSBundleId"));
         }
+    }
+
+    public WebElement scrollToElement(){
+        return driver.findElement(AppiumBy.androidUIAutomator(
+                "new UiScrollable(new UiSelector()" + ".scrollable(true)).scrollIntoView("
+                        + "new UiSelector().description(\"test-Price\"));"));
+    }
+
+    public void iOSScrollToElement() {
+//	  RemoteWebElement element = (RemoteWebElement)getDriver().findElement(By.name("test-ADD TO CART"));
+//	  String elementID = element.getId();
+        HashMap<String, String> scrollObject = new HashMap<String, String>();
+//	  scrollObject.put("element", elementID);
+        scrollObject.put("direction", "down");
+//	  scrollObject.put("predicateString", "label == 'ADD TO CART'");
+//	  scrollObject.put("name", "test-ADD TO CART");
+//	  scrollObject.put("toVisible", "sdfnjksdnfkld");
+        driver.executeScript("mobile:scroll", scrollObject);
     }
 
     @AfterTest

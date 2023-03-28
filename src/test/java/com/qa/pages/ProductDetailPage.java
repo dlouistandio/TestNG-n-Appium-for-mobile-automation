@@ -14,9 +14,15 @@ public class ProductDetailPage extends BaseTest {
     @iOSXCUITFindBy (xpath = "//XCUIElementTypeOther[@name=\"test-Description\"]/child::XCUIElementTypeStaticText[2]")
     private WebElement SLBDesc;
 
+//    @AndroidFindBy(accessibility = "test-Price")
+//    private WebElement SLBPrice;
+
     @AndroidFindBy(accessibility = "test-BACK TO PRODUCTS")
     @iOSXCUITFindBy (id = "test-BACK TO PRODUCTS")
     private WebElement backToProductBtn;
+
+    @iOSXCUITFindBy (id = "test-ADD TO CART")
+    private WebElement addToCartBtn;
 
     public String getSLBTitle(){
         String title = getText(SLBTitle);
@@ -28,6 +34,24 @@ public class ProductDetailPage extends BaseTest {
         String desc = getText(SLBDesc);
         System.out.println("Product desc in details page is " + desc);
         return desc;
+    }
+
+//    public String getSLBPrice(){
+//        String price = getText(SLBPrice);
+//        System.out.println("Product price in details page is " + price);
+//        return price;
+//    }
+
+    public String scrollToSLBPriceAndGetTxt(){
+        return getText(scrollToElement());
+    }
+
+    public void scrollPage(){
+        iOSScrollToElement();
+    }
+
+    public boolean isAddToCartBtnDisp(){
+        return addToCartBtn.isDisplayed();
     }
 
     public ProductPage pressBackToProductsBtn(){

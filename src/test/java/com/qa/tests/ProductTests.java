@@ -55,7 +55,6 @@ public class ProductTests extends BaseTest {
     public void afterMethod(){
         settingPage = productPage.pressSettingBtn();
         loginPage = settingPage.pressLogoutBtn();
-
     }
 
     @Test
@@ -80,10 +79,20 @@ public class ProductTests extends BaseTest {
         String SLBTitle = productDetailPage.getSLBTitle();
         sa.assertEquals(SLBTitle, strings.get("product_detail_page_slb_title"));
 
-        String SLBPrice = productDetailPage.getSLBDesc();
-        sa.assertEquals(SLBPrice, strings.get("product_detail_page_slb_desc"));
+        String SLBDesc = productDetailPage.getSLBDesc();
+        sa.assertEquals(SLBDesc, strings.get("product_detail_page_slb_desc"));
 
-//        productPage = productDetailPage.pressBackToProductsBtn();
+        if(platform.equalsIgnoreCase("Android")){
+            String SLBPrice = productDetailPage.scrollToSLBPriceAndGetTxt();
+            sa.assertEquals(SLBPrice, strings.get("product_detail_page_slb_price"));
+        }
+        if(platform.equalsIgnoreCase("IOS")){
+            String SLBTxt = productDetailPage.getSLBDesc();
+            sa.assertEquals(SLBTxt, strings.get("product_detail_page_slb_desc"));
+
+            productDetailPage.scrollPage();
+            sa.assertTrue(productDetailPage.isAddToCartBtnDisp());
+        }
 
         sa.assertAll();
     }
