@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import org.testng.Reporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TestListener implements ITestListener {
+
+
     public void onTestFailure(ITestResult result){
         if(result.getThrowable() != null){
             StringWriter sw = new StringWriter();
@@ -26,14 +29,18 @@ public class TestListener implements ITestListener {
         Map<String, String> params = new HashMap<>();
         params = result.getTestContext().getCurrentXmlTest().getAllParameters();
 
-        String imagePath = "Screenshoot" + File.separator + params.get("platformName") +"_"+params.get("platformVersion")+"_"+params.get("deviceName")
+        String imagePath = "Screenshot" + File.separator + params.get("platformName") +"_"+params.get("platformVersion")+"_"+params.get("deviceName")
                 + File.separator + base.getDateTime() + File.separator + result.getTestClass().getRealClass().getSimpleName()
                 + File.separator + result.getName() + ".png";
 
+        String completeImagePath = System.getProperty("user.dir") + File.separator + imagePath;
+
         try {
             FileUtils.copyFile(file,new File(imagePath));
+            Reporter.log("This is the sample screenshot");
+            Reporter.log("<a href='"+ completeImagePath + "'> <img src='"+ completeImagePath + "' height='400' width='400'/> </a>");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+           e.printStackTrace();
         }
     }
 }

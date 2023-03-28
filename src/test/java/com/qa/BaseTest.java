@@ -8,6 +8,8 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.screenrecording.CanRecordScreen;
+import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -15,17 +17,17 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Parameters;
+import org.testng.ITestResult;
+import org.testng.annotations.*;
 
 
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.PublicKey;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class BaseTest {
@@ -43,9 +45,44 @@ public class BaseTest {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
+    @BeforeMethod
+    public void beforeMethod(){
+        System.out.println("super before method");
+        ((CanRecordScreen) driver).startRecordingScreen();
+    }
+
+    @AfterMethod
+    public void afterMethod(ITestResult result){
+        System.out.println("super after method");
+        String media = ((CanRecordScreen) driver).stopRecordingScreen();
+
+       Map<String, String> params = result.getTestContext().getCurrentXmlTest().getAllParameters();
+
+       if(result.getStatus() == 2){
+           String dir = "videos" + File.separator + params.get("platformName") +"_"+params.get("platformVersion")+"_"+params.get("deviceName")
+                   + File.separator + dateTime + File.separator + result.getTestClass().getRealClass().getSimpleName();
+
+           File videoDir = new File(dir);
+
+           if(videoDir.exists()){
+               videoDir.mkdirs();
+           }
+
+           try {
+               FileOutputStream stream = new FileOutputStream(videoDir + File.separator + result.getName() + ".mp4");
+               stream.write(Base64.decodeBase64(media));
+           } catch (FileNotFoundException e) {
+               e.printStackTrace();
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       }
+    }
+
     @Parameters({"platformName","platformVersion","deviceName","udid"})
     @BeforeTest
     public void beforeTest(String platformName, String platformVersion, String deviceName, String udid) throws Exception {
+        utils = new TestUtils();
         dateTime = utils.dateTime();
         platform = platformName;
         URL url;
@@ -58,7 +95,6 @@ public class BaseTest {
             props.load(inputStream);
 
             stringis = getClass().getClassLoader().getResourceAsStream(xmlFileName);
-            utils = new TestUtils();
             strings = utils.parseStringXML(stringis);
 
             DesiredCapabilities caps = new DesiredCapabilities();
