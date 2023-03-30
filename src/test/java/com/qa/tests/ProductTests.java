@@ -17,13 +17,14 @@ import java.lang.reflect.Method;
 public class ProductTests extends BaseTest {
     LoginPage loginPage;
     ProductPage productPage;
-    InputStream datais;
     JSONObject loginUsers;
     SettingPage settingPage;
     ProductDetailPage productDetailPage;
 
     @BeforeClass
     public void beforeClass() throws IOException {
+        InputStream datais = null;
+        
         try{
             String dataFileName = "data/loginUsers.json";
             datais = getClass().getClassLoader().getResourceAsStream(dataFileName);
@@ -62,10 +63,10 @@ public class ProductTests extends BaseTest {
         SoftAssert sa = new SoftAssert();
 
         String SLBTitle = productPage.getSLBTitle();
-        sa.assertEquals(SLBTitle, strings.get("product_page_slb_title"));
+        sa.assertEquals(SLBTitle, getStrings().get("product_page_slb_title"));
 
         String SLBPrice = productPage.getSLBPrice();
-        sa.assertEquals(SLBPrice, strings.get("product_page_slb_price"));
+        sa.assertEquals(SLBPrice, getStrings().get("product_page_slb_price"));
 
         sa.assertAll();
     }
@@ -77,18 +78,18 @@ public class ProductTests extends BaseTest {
         productDetailPage = productPage.pressSLBTitle();
 
         String SLBTitle = productDetailPage.getSLBTitle();
-        sa.assertEquals(SLBTitle, strings.get("product_detail_page_slb_title"));
+        sa.assertEquals(SLBTitle, getStrings().get("product_detail_page_slb_title"));
 
         String SLBDesc = productDetailPage.getSLBDesc();
-        sa.assertEquals(SLBDesc, strings.get("product_detail_page_slb_desc"));
+        sa.assertEquals(SLBDesc, getStrings().get("product_detail_page_slb_desc"));
 
-        if(platform.equalsIgnoreCase("Android")){
+        if(getPlatform().equalsIgnoreCase("Android")){
             String SLBPrice = productDetailPage.scrollToSLBPriceAndGetTxt();
-            sa.assertEquals(SLBPrice, strings.get("product_detail_page_slb_price"));
+            sa.assertEquals(SLBPrice, getStrings().get("product_detail_page_slb_price"));
         }
-        if(platform.equalsIgnoreCase("IOS")){
+        if(getPlatform().equalsIgnoreCase("IOS")){
             String SLBTxt = productDetailPage.getSLBDesc();
-            sa.assertEquals(SLBTxt, strings.get("product_detail_page_slb_desc"));
+            sa.assertEquals(SLBTxt, getStrings().get("product_detail_page_slb_desc"));
 
             productDetailPage.scrollPage();
             sa.assertTrue(productDetailPage.isAddToCartBtnDisp());

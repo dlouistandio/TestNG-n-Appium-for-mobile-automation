@@ -1,11 +1,13 @@
 package com.qa.pages;
 
 import com.qa.BaseTest;
+import com.qa.utils.TestUtils;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import org.openqa.selenium.WebElement;
 
 public class ProductDetailPage extends BaseTest {
+    TestUtils utils = new TestUtils();
     @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"test-Description\"]/android.widget.TextView[1]")
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeOther[@name=\"test-Description\"]/child::XCUIElementTypeStaticText[1]")
     private WebElement SLBTitle;

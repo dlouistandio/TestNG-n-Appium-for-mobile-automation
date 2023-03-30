@@ -19,11 +19,12 @@ import java.lang.reflect.Method;
 public class LoginTests extends BaseTest {
     LoginPage loginPage;
     ProductPage productPage;
-    InputStream datais;
     JSONObject loginUsers;
 
     @BeforeClass
     public void beforeClass() throws IOException {
+        InputStream datais = null;
+
         try{
             String dataFileName = "data/loginUsers.json";
             datais = getClass().getClassLoader().getResourceAsStream(dataFileName);
@@ -60,7 +61,7 @@ public class LoginTests extends BaseTest {
         loginPage.pressLoginBtn();
 
         String actualErrTxt = loginPage.getErrorTxt();
-        String expectedErrTxt = strings.get("err_invalid_username_or_password");
+        String expectedErrTxt = getStrings().get("err_invalid_username_or_password");
         System.out.println("Actual error text = " + actualErrTxt + "\n" + "Expected error text = " + expectedErrTxt);
 
         Assert.assertEquals(actualErrTxt, expectedErrTxt);
@@ -73,7 +74,7 @@ public class LoginTests extends BaseTest {
         productPage = loginPage.pressLoginBtn();
 
         String actualProductTittle = productPage.getTitle();
-        String expectedProductTittle = strings.get("product_title");
+        String expectedProductTittle = getStrings().get("product_title");
         System.out.println("Actual error text = " + actualProductTittle + "\n" + "Expected error text = " + expectedProductTittle);
 
         Assert.assertEquals(actualProductTittle, expectedProductTittle);
