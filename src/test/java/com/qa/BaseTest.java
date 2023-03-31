@@ -38,7 +38,7 @@ public class BaseTest {
     protected static ThreadLocal<String> platform = new ThreadLocal<String>() ;
     protected static ThreadLocal<String> dateTime = new ThreadLocal<String>();
     protected static ThreadLocal<String> deviceName = new ThreadLocal<String>();
-    TestUtils utils;
+    TestUtils utils = new TestUtils();
 
     //Getter and Setter for global parameters
     public AppiumDriver getDriver() {
@@ -207,13 +207,15 @@ public class BaseTest {
         e.clear();
     }
 
-    public void click(WebElement e){
+    public void click(WebElement e, String msg){
         waitForVisibilty(e);
         e.click();
+        utils.log(msg);
     }
 
-    public void sendKeys(WebElement e, String text){
+    public void sendKeys(WebElement e, String text, String msg){
         waitForVisibilty(e);
+        utils.log(msg);
         e.sendKeys(text);
     }
 
@@ -222,13 +224,14 @@ public class BaseTest {
         return e.getAttribute(attribute);
     }
 
-    public String getText(WebElement e){
+    public String getText(WebElement e, String msg){
         switch (getPlatform()){
             case "Android":
                return getAttribute(e, "text");
             case "iOS":
                 return getAttribute(e, "label");
         }
+        utils.log(msg);
         return null;
     }
 

@@ -16,8 +16,8 @@ public class ProductDetailPage extends BaseTest {
     @iOSXCUITFindBy (xpath = "//XCUIElementTypeOther[@name=\"test-Description\"]/child::XCUIElementTypeStaticText[2]")
     private WebElement SLBDesc;
 
-//    @AndroidFindBy(accessibility = "test-Price")
-//    private WebElement SLBPrice;
+    @AndroidFindBy(accessibility = "test-Price")
+    private WebElement SLBPrice;
 
     @AndroidFindBy(accessibility = "test-BACK TO PRODUCTS")
     @iOSXCUITFindBy (id = "test-BACK TO PRODUCTS")
@@ -27,25 +27,22 @@ public class ProductDetailPage extends BaseTest {
     private WebElement addToCartBtn;
 
     public String getSLBTitle(){
-        String title = getText(SLBTitle);
-        System.out.println("Product title in details page is " + title);
+        String title = getText(SLBTitle,"Product title in details page is ");
         return title;
     }
 
     public String getSLBDesc(){
-        String desc = getText(SLBDesc);
-        System.out.println("Product desc in details page is " + desc);
+        String desc = getText(SLBDesc,"Product desc in details page is ");
         return desc;
     }
 
-//    public String getSLBPrice(){
-//        String price = getText(SLBPrice);
-//        System.out.println("Product price in details page is " + price);
-//        return price;
-//    }
+    public String getSLBPrice(){
+        String price = getText(SLBPrice,"Product price in details page is " );
+        return price;
+    }
 
     public String scrollToSLBPriceAndGetTxt(){
-        return getText(scrollToElement());
+        return getText(scrollToElement(), "");
     }
 
     public void scrollPage(){
@@ -57,8 +54,7 @@ public class ProductDetailPage extends BaseTest {
     }
 
     public ProductPage pressBackToProductsBtn(){
-        System.out.println("Press back to product page");
-        click(backToProductBtn);
+        click(backToProductBtn,"Press back to product page");
         return new ProductPage();
     }
 }
