@@ -10,6 +10,9 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.screenrecording.CanRecordScreen;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -38,7 +41,8 @@ public class BaseTest {
     protected static ThreadLocal<String> platform = new ThreadLocal<String>() ;
     protected static ThreadLocal<String> dateTime = new ThreadLocal<String>();
     protected static ThreadLocal<String> deviceName = new ThreadLocal<String>();
-    TestUtils utils = new TestUtils();
+    public TestUtils utils = new TestUtils();
+
 
     //Getter and Setter for global parameters
     public AppiumDriver getDriver() {
@@ -107,7 +111,7 @@ public class BaseTest {
 
        if(result.getStatus() == 2){
            String dir = "videos" + File.separator + params.get("platformName") +"_"+params.get("platformVersion")+"_"+params.get("deviceName")
-                   + File.separator + dateTime + File.separator + result.getTestClass().getRealClass().getSimpleName();
+                   + File.separator + getDateTime() + File.separator + result.getTestClass().getRealClass().getSimpleName();
 
            File videoDir = new File(dir);
 
@@ -129,7 +133,6 @@ public class BaseTest {
     @Parameters({"platformName","platformVersion","deviceName","udid"})
     @BeforeTest
     public void beforeTest(String platformName, String platformVersion, String deviceName, String udid) throws Exception {
-        utils = new TestUtils();
         setDateTime(utils.dateTime());
         setPlatform(platformName);
         URL url;
@@ -138,6 +141,13 @@ public class BaseTest {
         Properties props = new Properties();
         AppiumDriver driver;
         setDeviceName(deviceName);
+
+        String strFile = "logs" + File.separator + platformName + "_" + deviceName;
+        File logFile = new File(strFile);
+        if(!logFile.exists()){
+            logFile.mkdirs();
+        }
+        ThreadContext.put("ROUTINGKEY", strFile);
 
         try{
             props = new Properties();
@@ -155,6 +165,7 @@ public class BaseTest {
             caps.setCapability(MobileCapabilityType.PLATFORM_NAME,platformName);
             caps.setCapability(MobileCapabilityType.PLATFORM_VERSION,platformVersion);
             caps.setCapability(MobileCapabilityType.DEVICE_NAME,deviceName);
+            url = new URL(props.getProperty("appiumURL"));
 
             switch (platformName){
                 case "Android":
@@ -162,22 +173,18 @@ public class BaseTest {
                     caps.setCapability(MobileCapabilityType.AUTOMATION_NAME,props.getProperty("androidAutomationName"));
                     caps.setCapability("appPackage",props.getProperty("androidAppPackage"));
                     caps.setCapability("appActivity",props.getProperty("androidAppActivity"));
-//                    String androidAppUrl = getClass().getResource(props.getProperty("androidAppLocation")).getFile();
-//                    System.out.println("app url is " + androidAppUrl);
+                    String androidAppUrl = getClass().getResource(props.getProperty("androidAppLocation")).getFile();
+                    utils.log().info("app url is " + androidAppUrl);
 //                    caps.setCapability("app", androidAppUrl);
-
-                    url = new URL(props.getProperty("appiumURL"));
 
                     driver = new AndroidDriver(url,caps);
                     break;
                 case "iOS":
                     caps.setCapability(MobileCapabilityType.AUTOMATION_NAME,props.getProperty("iOSAutomationName"));
                     String iosAppUrl = getClass().getResource(props.getProperty("iOSAppLocation")).getFile();
-                    System.out.println("app url is " + iosAppUrl);
+                    utils.log().info("app url is " + iosAppUrl);
                     caps.setCapability("bundleId", props.getProperty("iOSBundleId"));
 //                    caps.setCapability("app", iosAppUrl);
-
-                    url = new URL(props.getProperty("appiumURL"));
 
                     driver = new IOSDriver(url, caps);
                     break;
@@ -207,15 +214,13 @@ public class BaseTest {
         e.clear();
     }
 
-    public void click(WebElement e, String msg){
+    public void click(WebElement e){
         waitForVisibilty(e);
         e.click();
-        utils.log(msg);
     }
 
-    public void sendKeys(WebElement e, String text, String msg){
+    public void sendKeys(WebElement e, String text){
         waitForVisibilty(e);
-        utils.log(msg);
         e.sendKeys(text);
     }
 
@@ -224,14 +229,13 @@ public class BaseTest {
         return e.getAttribute(attribute);
     }
 
-    public String getText(WebElement e, String msg){
+    public String getText(WebElement e){
         switch (getPlatform()){
             case "Android":
                return getAttribute(e, "text");
             case "iOS":
                 return getAttribute(e, "label");
         }
-        utils.log(msg);
         return null;
     }
 

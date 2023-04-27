@@ -27,22 +27,25 @@ public class ProductDetailPage extends BaseTest {
     private WebElement addToCartBtn;
 
     public String getSLBTitle(){
-        String title = getText(SLBTitle,"Product title in details page is ");
+        String title = getText(SLBTitle);
+        utils.log().info("Product title in details page is " + title);
         return title;
     }
 
     public String getSLBDesc(){
-        String desc = getText(SLBDesc,"Product desc in details page is ");
+        String desc = getText(SLBDesc);
+        utils.log().info("Product desc in details page is " + desc);
         return desc;
     }
 
     public String getSLBPrice(){
-        String price = getText(SLBPrice,"Product price in details page is " );
+        String price = getText(SLBPrice);
+        utils.log().info("Product price in details page is "  + price);
         return price;
     }
 
     public String scrollToSLBPriceAndGetTxt(){
-        return getText(scrollToElement(), "");
+        return getText(scrollToElement());
     }
 
     public void scrollPage(){
@@ -54,7 +57,8 @@ public class ProductDetailPage extends BaseTest {
     }
 
     public ProductPage pressBackToProductsBtn(){
-        click(backToProductBtn,"Press back to product page");
+        click(backToProductBtn);
+        utils.log().info("Press back to product page");
         return new ProductPage();
     }
 }

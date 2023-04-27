@@ -3,6 +3,7 @@ package com.qa.tests;
 import com.qa.BaseTest;
 import com.qa.pages.LoginPage;
 import com.qa.pages.ProductPage;
+import com.qa.utils.TestUtils;
 import io.appium.java_client.AppiumBy;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -46,13 +47,13 @@ public class LoginTests extends BaseTest {
     }
     @BeforeMethod
     public void beforeMethod(Method m){
-        System.out.println("login test before method");
+        utils.log().info("login test before method");
         loginPage = new LoginPage();
-        System.out.println("\n" + "******* Start test: " + m.getName() + "*********" + "\n");
+        utils.log().info("\n" + "******* Start test: " + m.getName() + "*********" + "\n");
     }
     @AfterMethod
     public void afterMethod(){
-        System.out.println("login test after method");
+        utils.log().info("login test after method");
     }
     @Test
     public void invalidLogin(){
@@ -62,7 +63,7 @@ public class LoginTests extends BaseTest {
 
         String actualErrTxt = loginPage.getErrorTxt();
         String expectedErrTxt = getStrings().get("err_invalid_username_or_password");
-        System.out.println("Actual error text = " + actualErrTxt + "\n" + "Expected error text = " + expectedErrTxt);
+        utils.log().info("Actual error text = " + actualErrTxt + "||" + "Expected error text = " + expectedErrTxt);
 
         Assert.assertEquals(actualErrTxt, expectedErrTxt);
     }
@@ -75,7 +76,7 @@ public class LoginTests extends BaseTest {
 
         String actualProductTittle = productPage.getTitle();
         String expectedProductTittle = getStrings().get("product_title");
-        System.out.println("Actual error text = " + actualProductTittle + "\n" + "Expected error text = " + expectedProductTittle);
+        utils.log().info("Actual error text = " + actualProductTittle + "\n" + "Expected error text = " + expectedProductTittle);
 
         Assert.assertEquals(actualProductTittle, expectedProductTittle);
     }

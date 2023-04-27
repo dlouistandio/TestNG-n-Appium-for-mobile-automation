@@ -2,6 +2,7 @@ package com.qa.pages;
 
 import com.qa.BaseTest;
 import com.qa.MenuPage;
+import com.qa.utils.TestUtils;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
@@ -22,22 +23,26 @@ public class ProductPage extends MenuPage {
     private WebElement SLBPrice;
 
     public String getTitle(){
-        String title = getText(productText, "Page title is ");
+        String title = getText(productText);
+        utils.log().info("Page title is " + title);
         return title;
     }
 
     public String getSLBTitle(){
-        String product = getText(SLBTitle, "Product title is ");
+        String product = getText(SLBTitle);
+        utils.log().info("Product title is " + product);
         return product;
     }
 
     public String getSLBPrice(){
-        String price = getText(SLBPrice, "Product price is ");
+        String price = getText(SLBPrice);
+        utils.log().info("Product price is " + price);
         return price;
     }
 
     public ProductDetailPage pressSLBTitle(){
-        click(SLBTitle,"Press the product");
+        click(SLBTitle);
+        utils.log().info("Press the product");
         return new ProductDetailPage();
     }
 }
